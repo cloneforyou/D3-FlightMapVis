@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<style>
+
+.states {
+  fill: #ccc;
+}
+
+.state-borders {
+  fill: none;
+  stroke: #fff;
+  stroke-width: 1.5px;
+  stroke-linejoin: round;
+  stroke-linecap: round;
+}
+
+.airport-arcs {
+  display: none;
+  fill: none;
+  stroke-opacity: 0.7;
+  stroke-width:0.5;
+  stroke-dasharray: 3,3;
+  stroke:grey;
+}
+
+.airport-cell {
+  fill: none;
+  pointer-events: all;
+  stroke: none ;
+}
+
+.airports circle {
+  /*fill: steelblue;*/
+  stroke: #fff;
+  pointer-events: none;
+}
+
+.airport:hover .airport-arcs {
+  display: inline;
+
+}
+
+svg:not(:hover) .airport-cell {
+  stroke: #000;
+  stroke-opacity: .1;
+}
+
+.axis {
+	  font: 10px sans-serif;
+	}
+
+.axis path,
+.axis line {
+	fill: none;
+	stroke: black;
+	stroke-width: 1;
+	shape-rendering: crispEdges;
+}
+.label {
+            font-size: 13px;
+        }
+
+.bar text{
+  font-size: 10 px;
+}
+
+
+div.tooltip {	
+    position: absolute;			
+    text-align: center;			
+    width: 120px;					
+    height: 20px;					
+    padding: 2px;				
+    font: 12px sans-serif;		
+    background: lightsteelblue;	
+    border: 0px;		
+    border-radius: 8px;			
+    pointer-events: none;			
+}
+
+
+.hidden {
+  display: none;
+}
+
+.map{
+  display: block;
+  margin: auto;
+}
+
+
+.loader {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  z-index: 1;
+  width: 80px;
+  height: 80px;
+  margin: -75px 0 0 -75px;
+  border: 16px solid #f3f3f3;
+  border-radius: 50%;
+  /*border-top: 16px solid #3498db;*/
+  border-top: 16px solid #2B4162;
+  width: 80px;
+  height: 80px;
+  -webkit-animation: spin 2s linear infinite;
+  animation: spin 1.5s linear infinite;
+}
+
+@-webkit-keyframes spin {
+  0% { -webkit-transform: rotate(0deg); }
+  100% { -webkit-transform: rotate(360deg); }
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+
+ /*Add animation to "page content" */
+.animate-bottom {
+  position: relative;
+  -webkit-animation-name: animatebottom;
+  -webkit-animation-duration: 1.0s;
+  animation-name: animatebottom;
+  animation-duration: 1.0s
+}
+
+@-webkit-keyframes animatebottom {
+  from { bottom:-100px; opacity:0 } 
+  to { bottom:0px; opacity:1 }
+}
+
+@keyframes animatebottom { 
+  from{ bottom:-100px; opacity:0 } 
+  to{ bottom:0; opacity:1 }
+}
+
+
+
+</style>
+
+<script src="http://d3js.org/d3.v3.min.js"></script>
+<script src="http://d3js.org/queue.v1.min.js"></script>
+<script src="http://d3js.org/topojson.v1.min.js"></script>
+<script src="progressbar.js"> </script>
+<!--<script src="http://d3.legend.js"></script>-->
+<!--<script src="https://cdnjs.cloudflare.com/ajax/libs/d3-legend/2.21.0/d3-legend.js"> </script>-->
+<!--<script src="https://cdnjs.com/libraries/d3-legend"> </script>-->
+<script src='nprogress.js'></script>
+<link rel='stylesheet' href='nprogress.css'/>
+
+
+ <link rel="stylesheet" href="http://code.jquery.com/ui/1.11.1/themes/smoothness/jquery-ui.css">
+ <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+ <!-- Optional theme -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+<link href="https://fonts.googleapis.com/css?family=Raleway:400,300,600,800,900" rel="stylesheet" type="text/css">
+
+<!-- Latest compiled and minified JavaScript -->
+  <script src="http://code.jquery.com/jquery-1.10.2.js"></script>
+
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+  <script src="http://code.jquery.com/ui/1.11.1/jquery-ui.js"></script>
+
+<div style="padding: 10px 10px 10px 30px">
+	<div id="title">
+        <p> <b> <h3> <center >US Flight Map in January 2016 </center> </h3> </b> </p>
+	</div>
+  <div>
+    
+   
+    <p>  <b> Step 1:</b> Please click an <b> airport </b> which you want to explore more. </p>
+   
+    </div>
+   <div class = "row">
+     
+     <!--<div class ="col-md-6" >-->
+         <!--<p> <b> Step 1:</b> Please click an <b> airport </b> which you want to explore more. </p>-->
+
+       <div id="maps">
+         <!--<div id="container">
+         </div>-->
+         <div class="loader" id ="load"> </div>
+    		<script src="assignment.js"></script>
+		<!--<script src="assignment.js"></script>-->
+	</div>
+   <p id="label"> </p>
+     <!--</div>-->
+   </div>
+   <div class="row">
+     <div class = "col-md-6">
+       <p> <b> Step 2: </b> Choose the <b> type  </b> of  airport: </p>
+    <div id="filter1">
+        	<select id="select1">
+            <option value="DEFAULT">Please choose</option>
+						<option value="ORIGIN">Departure</option>
+						<option value="DEST">Arrival</option>
+			</select>
+       
+    </div>
+    <p> <b> Step 3:</b>  Choose a <b> carrier </b> : </p>
+       <div id="filter2">
+        	<select id="select2">
+                         <option value="default">Please choose</option> 
+                        <option value="all">All</option> 
+						            <option value="DL">Delta</option>
+						            <option value="B6">JetBlue</option>
+                        <option value="AA">American Airlines</option>
+                        <option value="AS">Alska Airlines</option>
+                        <option value="EV">EVA Air</option>
+                        <option value="F9">Frontier Airlines</option>
+                        <option value="HA">Hawaiian Airlines</option>
+                        <option value="NK">Spirit Airlines</option>
+                        <option value="OO">SkyWest Airlines </option>
+                        <option value="UA">United Airlines</option>
+                        <option value="VX">Virgin America</option>
+                        <option value="WN">Southwest Airlines</option>
+			</select>
+       </div>
+    <p> <b> Step 4: </b>The detailed analysis results are shown below: </p>
+    <div class = "row">
+    <div class = "col-md-6" id="analysis1"></div>
+    <div class = "col-md-6" id="analysis2"></div></div>
+     </div>
+
+   <!--<div class = "row">-->
+   <div class = "col-md-6" id="calendar">
+      <p> <b> Step 5: </b>See the <b> Calendar View of Delay Time</b>: </p>
+   <!--<div id="calendar"> </div>-->
+   <!--</div>-->
+   </div>
+   </div>
+  </div>
+  
+
+    	<script>
+				
+                        	var airport_type; 
+                            var  carrier_type;
+            //             document.getElementById("select1").onchange =
+						// function(){
+            //                 airport_type = this.value;
+            //                 document.getElementById("select2").onchange=
+            //                 function(){
+            //                    filterType(airport_type,this.value);
+            //                 }
+            //             }
+               
+                 document.getElementById("select1").onchange = function(){
+                   airport_type=this.value;
+                  //  console.log("airport")
+                  //  console.log(airport_type)
+                  //  console.log(carrier_type)
+                   filterType(airport_type,carrier_type)
+                 }
+                  document.getElementById("select2").onchange = function(){
+                   carrier_type=this.value;
+                  //  console.log("carrier")
+                  //  console.log(carrier_type)
+                   filterType(airport_type,carrier_type)
+                 }
+         //        console.log(airport_type,carrier_type)
+
+                        
+    
+						
+		</script>
+        
+
+    </div>
+
+</body>
+</html>
+
+
+<!--<script src="assignment.js"></script>-->
+ 
